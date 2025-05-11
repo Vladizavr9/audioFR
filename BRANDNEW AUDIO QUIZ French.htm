@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French Audio Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #f3f4f6; }
+    .question-container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+    .answer-label { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+    .correct { color: #10b981; }
+    .incorrect { color: #ef4444; }
+    .speak-btn { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="question-container">
+    <h1 class="text-3xl font-bold text-center mb-6">French Audio Quiz</h1>
+
+    <!-- Question 1 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 1</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Ça va ?')">Play Question</button>
+      <div class="answers" id="answers-1"></div>
+      <p id="feedback-1" class="mt-2"></p>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 2</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Comment ça s\'écrit ?')">Play Question</button>
+      <div class="answers" id="answers-2"></div>
+      <p id="feedback-2" class="mt-2"></p>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 3</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Comment vous appelez-vous ?')">Play Question</button>
+      <div class="answers" id="answers-3"></div>
+      <p id="feedback-3" class="mt-2"></p>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 4</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Et toi, tu es français ?')">Play Question</button>
+      <div class="answers" id="answers-4"></div>
+      <p id="feedback-4" class="mt-2"></p>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 5</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Tu aimes la musique russe ?')">Play Question</button>
+      <div class="answers" id="answers-5"></div>
+      <p id="feedback-5" class="mt-2"></p>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 6</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Et vous ?')">Play Question</button>
+      <div class="answers" id="answers-6"></div>
+      <p id="feedback-6" class="mt-2"></p>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 7</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Vous allez bien ?')">Play Question</button>
+      <div class="answers" id="answers-7"></div>
+      <p id="feedback-7" class="mt-2"></p>
+    </div>
+
+    <!-- Question 8 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 8</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Vous avez un téléphone ?')">Play Question</button>
+      <div class="answers" id="answers-8"></div>
+      <p id="feedback-8" class="mt-2"></p>
+    </div>
+
+    <!-- Question 9 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 9</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Vous voulez appeler quelqu\'un ?')">Play Question</button>
+      <div class="answers" id="answers-9"></div>
+      <p id="feedback-9" class="mt-2"></p>
+    </div>
+
+    <!-- Question 10 -->
+    <div class="bg-white p-6 rounded-lg shadow mb-4">
+      <h3 class="text-xl font-semibold mb-2">Question 10</h3>
+      <button class="speak-btn bg-blue-500 text-white px-4 py-2 rounded mb-4" onclick="speak('Quelle heure est-il ?')">Play Question</button>
+      <div class="answers" id="answers-10"></div>
+      <p id="feedback-10" class="mt-2"></p>
+    </div>
+  </div>
+
+  <script>
+    // Fisher-Yates shuffle algorithm
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Define questions and answers
+    const quizData = [
+      {
+        question: "Ça va ?",
+        answers: [
+          { text: "Oui, ça va bien, merci !", value: "a", correct: true },
+          { text: "Au revoir !", value: "b", correct: false },
+          { text: "J'ai 31 ans.", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Oui, ça va bien, merci !"
+      },
+      {
+        question: "Comment ça s'écrit ?",
+        answers: [
+          { text: "D-I-E-G-O", value: "a", correct: true },
+          { text: "Oui.", value: "b", correct: false },
+          { text: "Il est une heure cinq.", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "D-I-E-G-O"
+      },
+      {
+        question: "Comment vous appelez-vous ?",
+        answers: [
+          { text: "Bonjour, je m’appelle Diego.", value: "a", correct: true },
+          { text: "Merci !", value: "b", correct: false },
+          { text: "Et toi ?", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Bonjour, je m’appelle Diego."
+      },
+      {
+        question: "Et toi, tu es français ?",
+        answers: [
+          { text: "Oui.", value: "a", correct: true },
+          { text: "Comment tu t'appelles ?", value: "b", correct: false },
+          { text: "Bonne journée !", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Oui."
+      },
+      {
+        question: "Tu aimes la musique russe ?",
+        answers: [
+          { text: "Oui ! La musique et l'art.", value: "a", correct: true },
+          { text: "Je suis perdue.", value: "b", correct: false },
+          { text: "Vous avez un téléphone ?", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Oui ! La musique et l'art."
+      },
+      {
+        question: "Et vous ?",
+        answers: [
+          { text: "Moi, j'ai 33 ans.", value: "a", correct: true },
+          { text: "Salut Carla !", value: "b", correct: false },
+          { text: "Au revoir !", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Moi, j'ai 33 ans."
+      },
+      {
+        question: "Vous allez bien ?",
+        answers: [
+          { text: "Très bien, merci.", value: "a", correct: true },
+          { text: "Je m'appelle Issa.", value: "b", correct: false },
+          { text: "Il est deux heures moins vingt.", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Très bien, merci."
+      },
+      {
+        question: "Vous avez un téléphone ?",
+        answers: [
+          { text: "Je n'ai pas de téléphone.", value: "a", correct: true },
+          { text: "Ça va bien, merci !", value: "b", correct: false },
+          { text: "Comment tu t'appelles ?", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Je n'ai pas de téléphone."
+      },
+      {
+        question: "Vous voulez appeler quelqu'un ?",
+        answers: [
+          { text: "Je dois appeler mon amie.", value: "a", correct: true },
+          { text: "Bonjour, madame Atal.", value: "b", correct: false },
+          { text: "Quelle heure est-il ?", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Je dois appeler mon amie."
+      },
+      {
+        question: "Quelle heure est-il ?",
+        answers: [
+          { text: "Il est une heure.", value: "a", correct: true },
+          { text: "Je m'appelle Paul.", value: "b", correct: false },
+          { text: "Et vous ?", value: "c", correct: false }
+        ],
+        correctAnswer: "a",
+        correctText: "Il est une heure."
+      }
+    ];
+
+    // Render shuffled answers
+    function renderAnswers() {
+      quizData.forEach((question, index) => {
+        const questionNum = index + 1;
+        const answersContainer = document.getElementById(`answers-${questionNum}`);
+        const shuffledAnswers = shuffle([...question.answers]);
+        answersContainer.innerHTML = shuffledAnswers.map((answer, i) => `
+          <label class="answer-label">
+            <input type="radio" name="q${questionNum}" value="${answer.value}" onclick="checkAnswer(${questionNum}, '${question.correctAnswer}', '${question.correctText.replace(/'/g, "\\'")}')">
+            <button class="speak-btn bg-gray-200 px-2 py-1 rounded" onclick="speak('${answer.text.replace(/'/g, "\\'")}')">Play</button>
+            <span>Option ${String.fromCharCode(65 + i)}</span>
+          </label>
+        `).join('');
+      });
+    }
+
+    // Speak function for TTS
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'fr-FR';
+      const voices = speechSynthesis.getVoices();
+      const femaleVoice = voices.find(voice => voice.lang === 'fr-FR' && (voice.name.toLowerCase().includes('female') || voice.name.includes('Amélie') || voice.name.includes('Google français')));
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      speechSynthesis.speak(utterance);
+    }
+
+    // Load voices and render answers on page load
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = speechSynthesis.getVoices();
+      console.log('Available voices:', voices);
+      renderAnswers();
+    };
+
+    // Initial render in case voices are already loaded
+    renderAnswers();
+
+    // Check answer function
+    function checkAnswer(questionNum, correctAnswer, correctText) {
+      const selectedAnswer = document.querySelector(`input[name="q${questionNum}"]:checked`);
+      if (!selectedAnswer) return;
+      const feedbackElement = document.getElementById(`feedback-${questionNum}`);
+      if (selectedAnswer.value === correctAnswer) {
+        feedbackElement.textContent = `Correct! The answer is: ${correctText}`;
+        feedbackElement.className = 'mt-2 correct';
+      } else {
+        feedbackElement.textContent = `Incorrect. The correct answer is: ${correctText}`;
+        feedbackElement.className = 'mt-2 incorrect';
+      }
+    }
+  </script>
+</body>
+</html>
